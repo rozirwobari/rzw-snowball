@@ -40,6 +40,7 @@ AddEventHandler('rzw-snowball:server:GetSnowBall', function()
                 }
             },
         })
+        return
     end
     if cuaca and not isInVehicle then
         xPlayer.addInventoryItem(RZWConfigSnowBall.ItemName, 1)
