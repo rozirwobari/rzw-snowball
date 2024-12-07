@@ -24,5 +24,5 @@ Sistem Mengambil Bola Salju untuk Framework ESX
 
 ## 📦 Dependencies
 
-- [ox_inventory](https://github.com/overextended/ox_inventory)
+- [ox_inventory](https://github.com/overextended/ox_inventory) (Optional)
 - [ox_lib](https://github.com/overextended/ox_lib)
