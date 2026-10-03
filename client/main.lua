@@ -1,64 +1,26 @@
-local RZWClientSnowBall = {}
-RZWClientSnowBall.AntiSpawm = false
+local RZWSnowBall = {}
+local Config = lib.load("shared.main")
 
-RZWClientSnowBall.CuacaChecked = function()
-    local cuaca = GetPrevWeatherTypeHashName()
-    return RZWConfigSnowBall.Cuaca[cuaca]
+function RZWSnowBall:Init()
+    self.DelaySnow = false
+    lib.addKeybind({
+        name = 'rzw_snowball',
+        description = 'press '..Config.Keybind..' to get snowball',
+        defaultKey = Config.Keybind,
+        allowInPauseMenu = true,
+        onPressed = function(selfBind)
+            if self:IsSnowWeather() and not self.DelaySnow then
+                self:GetSnowBall()
+            end
+        end
+    })
+
+    lib.callback.register('rzw-snowball:client:IsSnowWeather', function()
+        return self:IsSnowWeather()
+    end)
 end
 
-RZWClientSnowBall.IsInVehicle = function()
-    return IsPedInAnyVehicle(PlayerPedId(), true)
-end
-
-lib.callback.register('rzw-snowball:client:CuacaChecked', function()
-    return RZWClientSnowBall.CuacaChecked()
-end)
-
-lib.callback.register('rzw-snowball:client:IsInVehicle', function()
-    return RZWClientSnowBall.IsInVehicle()
-end)
-
-RegisterCommand('getsnowball', function(xPlayer, args, showError)
-    if RZWClientSnowBall.AntiSpawm then return end
-    RZWClientSnowBall.AntiSpawm = true
-    if not RZWClientSnowBall.CuacaChecked() then
-        lib.notify({
-            title = 'SnowBall',
-            description = 'Tidak Ada Salju',
-            position = 'top',
-            duration = 7000,
-            type = 'error',
-            style = {
-                backgroundColor = '#172A3E',
-                color = '#D48D48',
-                ['.description'] = {
-                  color = '#E3E2E3'
-                }
-            },
-        })
-        RZWClientSnowBall.AntiSpawm = false
-        return
-    end
-
-    if RZWClientSnowBall.IsInVehicle() then
-        lib.notify({
-            title = 'SnowBall',
-            description = 'Mengambil SnowBall tidak bisa di dalam kendaraan',
-            position = 'top',
-            duration = 7000,
-            type = 'error',
-            style = {
-                backgroundColor = '#172A3E',
-                color = '#D48D48',
-                ['.description'] = {
-                  color = '#E3E2E3'
-                }
-            },
-        })
-        RZWClientSnowBall.AntiSpawm = false
-        return
-    end
-
+function RZWSnowBall:GetSnowBall()
     if lib.progressCircle({
         duration = 1500,
         position = 'bottom',
@@ -74,11 +36,17 @@ RegisterCommand('getsnowball', function(xPlayer, args, showError)
             clip = 'pickup_snowball'
         },
     }) then
-        RZWClientSnowBall.AntiSpawm = false
+        self.DelaySnow = true
+        SetTimeout((Config.DelayCollect * 1000), function()
+            self.DelaySnow = false
+        end)
         TriggerServerEvent('rzw-snowball:server:GetSnowBall')
-    else
-        RZWClientSnowBall.AntiSpawm = false
     end
-end, false)
+end
 
-RegisterKeyMapping('getsnowball', 'Mengamil Bola Salju', 'keyboard', RZWConfigSnowBall.Keybind)
+function RZWSnowBall:IsSnowWeather()
+    local weather = GetPrevWeatherTypeHashName()
+    return Config.WeatherList[weather] or false
+end
+
+RZWSnowBall:Init()

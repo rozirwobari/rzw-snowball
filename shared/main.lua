@@ -1,7 +1,10 @@
-RZWConfigSnowBall = {}
-RZWConfigSnowBall.Keybind = "G"
-RZWConfigSnowBall.ItemName = "WEAPON_SNOWBALL"
-RZWConfigSnowBall.DelayCollect = 10 -- Second or false
-RZWConfigSnowBall.Cuaca = {
+local Config = {}
+
+Config.Keybind = "G"
+Config.ItemName = "WEAPON_SNOWBALL"
+Config.DelayCollect = 5 -- Second or false
+Config.WeatherList = {
     [`Xmas`] = true,
 }
+
+return Config

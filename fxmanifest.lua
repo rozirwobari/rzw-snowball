@@ -2,9 +2,9 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 name "rzw-snowball"
-description "rzw-snowball adalah resource simpel mengambil bola salju :)"
+description "It is a modern, lightweight FiveM script for picking up snowballs during cold weather. It was created using the ESX framework and the ox_lib library."
 author "Rozir Wobari"
-version "1.0.0"
+version "2.0.0"
 
 shared_scripts {
 	'@ox_lib/init.lua',
